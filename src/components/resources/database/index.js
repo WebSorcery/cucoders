@@ -8,6 +8,7 @@ import Header from "components/headers/light.js";
 import Footer from "components/footers/footers.js";
 import { SectionHeading } from "components/misc/Headings";
 import { PrimaryButton } from "components/misc/Buttons";
+import cloudinary from "cloudinary"
 
 const HeadingRow = tw.div`flex`;
 const Heading = tw(SectionHeading)`text-gray-900`;
@@ -49,6 +50,30 @@ const Description = tw.div``;
 const ButtonContainer = tw.div`flex justify-center`;
 const LoadMoreButton = tw(PrimaryButton)`mt-16 mx-auto`;
 
+
+cloudinary.config({
+ cloud_name: "cuchapter", // add your cloud_name
+ api_key: "api_key", // add your api_key
+ api_secret: "api_secret", // add your api_secret
+ secure: true
+});
+let post=[];
+cloudinary.v2.api.resources({
+  type: 'upload',
+  prefix: 'addResources/Database' // add your folder
+},
+  function(error, result) { 
+    console.log(result);
+    result.resources.forEach((res)=>{
+      post.push({
+        imageSrc: res.secure_url,
+        category: (res.format=="pdf"?"Book":"Image"),
+        date: res.created_at.slice(0,10,10),
+        
+      })
+    })
+});
+
 export default ({
   headingText = "Security Resources",
   posts = [
@@ -64,37 +89,37 @@ export default ({
     {
       imageSrc:
         "https://images.unsplash.com/photo-1488229297570-58520851e868?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "MongoDB Notes for Professionals",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485135/addResources/Database/1656485078167_ypt8e6.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1488229297570-58520851e868?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
+      category: `${post[0].date}`,
+      date: `${post[0].date}`,
       title: "MySQL Notes for Professionals",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485127/addResources/Database/1656484841488_tueadw.pdf",
+      url: `${post[0].imageSrc}`,
       featured: false,
     },
     {
       imageSrc:
         "https://images.unsplash.com/photo-1488229297570-58520851e868?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "PostgreSQL Notes for Professionals",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485207/addResources/Database/1656485202797_mw9pvc.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1488229297570-58520851e868?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
+      category: `${post[1].date}`,
+      date: `${post[1].date}`,
       title: "SQL Notes for Professionals",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485132/addResources/Database/1656484929204_ezxaob.pdf",
+      url: `${post[1].imageSrc}`,
+      featured: false,
+    },
+    {
+      imageSrc:
+        "https://images.unsplash.com/photo-1488229297570-58520851e868?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+      category: `${post[2].date}`,
+      date: `${post[2].date}`,
+      title: "MongoDB Notes for Professionals",
+      url: `${post[2].imageSrc}`,
+      featured: false,
+    },
+    {
+      imageSrc:
+        "https://images.unsplash.com/photo-1488229297570-58520851e868?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+      category: `${post[3].category}`,
+      date: `${post[3].date}`,
+      title: "PostgreSQL Notes for Professionals",
+      url: `${post[3].imageSrc}`,
       featured: false,
     },
   ],
