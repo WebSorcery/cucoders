@@ -103,6 +103,7 @@ export default ({
       <NavLink href="/team">Team</NavLink>
       <NavLink href="/events">Events</NavLink>
       <NavLink href="/projects">Projects</NavLink>
+      <NavLink href="/profile">Profile</NavLink>
       <NavLink href="/resources">Resources</NavLink>
       <NavLink href="/careers">Careers</NavLink>
       <NavLink href="/member">Membership</NavLink>
