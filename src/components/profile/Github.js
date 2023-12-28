@@ -14,7 +14,7 @@ export default function Codeforces() {
           method:"POST",
           headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer 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'
+            Authorization: 'Bearer GITHUB_TOKEN'
           },
           body:JSON.stringify({"userName":userHandle, "year":year})
         })
