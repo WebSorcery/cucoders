@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts";
 import tw from "twin.macro";
@@ -8,7 +8,7 @@ import Header from "components/headers/light.js";
 import Footer from "components/footers/footers.js";
 import { SectionHeading } from "components/misc/Headings";
 import { PrimaryButton } from "components/misc/Buttons";
-
+import { getArray } from "../getResources";
 const HeadingRow = tw.div`flex`;
 const Heading = tw(SectionHeading)`text-gray-900`;
 const Posts = tw.div`mt-6 sm:-mr-8 flex flex-wrap`;
@@ -48,111 +48,124 @@ const Description = tw.div``;
 
 const ButtonContainer = tw.div`flex justify-center`;
 const LoadMoreButton = tw(PrimaryButton)`mt-16 mx-auto`;
-
+let staticData = [
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title:
+      "Algorithms by S. Dasgupta, C. H. Papadimitriou, and U. V. Vazirani",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485437/addResources/Data-Structure-Algorithms/Algorithms_1_x8d2xx.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Algorithms Notes for Professionals",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485438/addResources/Data-Structure-Algorithms/Algorithms_hjozqi.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Data Structures (Into Java)",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486026/addResources/Data-Structure-Algorithms/data-structures_pfoaeh.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Data Structures and Algorithm Analysis in C++",
+    description: "By Mark Allen Weiss",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485448/addResources/Data-Structure-Algorithms/DSA-_Mark_Allen_Weiss_mkxmav.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Matters Computational Ideas, Algorithms, Source Code",
+    description: "By Jorg Arndt",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485469/addResources/Data-Structure-Algorithms/Matters_computational_hzghq2.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 5, 2021",
+    title: "Introduction to Algorithms",
+    description:
+      "Introduction to Algorithms is a book on computer programming by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein.",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485471/addResources/Data-Structure-Algorithms/Introduction_to_Algorithms_3rd_Edition_The_MIT_Press_mzmifm.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 5, 2021",
+    title: "DSA by Narsimha Karamuchi",
+    description:
+      "Data Structure And Algorithmic Puzzles is a book that offers solutions to complex data structures and algorithms. There are multiple solutions for each problem and the book is coded in C/C++, it comes handy as an interview and exam guide for computer scientists",
+    url: "https://drive.google.com/file/d/1VA3gEEmqmkMgmp2AYrmNRJuS8tOgsFIX/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 5, 2021",
+    title: "Dynamic Programming for coding interviews.",
+    description:
+      "This book takes dynamic programming head-on. It first explain the concepts with simple examples and then deep dives into complex DP problems.",
+    url: "https://drive.google.com/file/d/1nLCKUxeQzayofpp4Lj5ce37gg44gmCFV/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 5, 2021",
+    title: "The Algorithm Design Manual",
+    description:
+      "The Algorithm Design Manual provides straightforward access to combinatorial algorithms technology, stressing design over analysis. The first part, Techniques, provides accessible instruction on methods for designing and analyzing computer algorithms.",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485477/addResources/Data-Structure-Algorithms/The_Algorithm_design_Manual_rpqbr7.pdf",
+    featured: false,
+  },
+]
+// let posts=getFunction(0,staticData);
 export default ({
   headingText = "DSA Resources",
-  posts = [
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title:
-        "Algorithms by S. Dasgupta, C. H. Papadimitriou, and U. V. Vazirani",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485437/addResources/Data-Structure-Algorithms/Algorithms_1_x8d2xx.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Algorithms Notes for Professionals",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485438/addResources/Data-Structure-Algorithms/Algorithms_hjozqi.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Data Structures (Into Java)",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486026/addResources/Data-Structure-Algorithms/data-structures_pfoaeh.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Data Structures and Algorithm Analysis in C++",
-      description: "By Mark Allen Weiss",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485448/addResources/Data-Structure-Algorithms/DSA-_Mark_Allen_Weiss_mkxmav.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Matters Computational Ideas, Algorithms, Source Code",
-      description: "By Jorg Arndt",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485469/addResources/Data-Structure-Algorithms/Matters_computational_hzghq2.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 5, 2021",
-      title: "Introduction to Algorithms",
-      description:
-        "Introduction to Algorithms is a book on computer programming by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein.",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485471/addResources/Data-Structure-Algorithms/Introduction_to_Algorithms_3rd_Edition_The_MIT_Press_mzmifm.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 5, 2021",
-      title: "DSA by Narsimha Karamuchi",
-      description:
-        "Data Structure And Algorithmic Puzzles is a book that offers solutions to complex data structures and algorithms. There are multiple solutions for each problem and the book is coded in C/C++, it comes handy as an interview and exam guide for computer scientists",
-      url: "https://drive.google.com/file/d/1VA3gEEmqmkMgmp2AYrmNRJuS8tOgsFIX/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 5, 2021",
-      title: "Dynamic Programming for coding interviews.",
-      description:
-        "This book takes dynamic programming head-on. It first explain the concepts with simple examples and then deep dives into complex DP problems.",
-      url: "https://drive.google.com/file/d/1nLCKUxeQzayofpp4Lj5ce37gg44gmCFV/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 5, 2021",
-      title: "The Algorithm Design Manual",
-      description:
-        "The Algorithm Design Manual provides straightforward access to combinatorial algorithms technology, stressing design over analysis. The first part, Techniques, provides accessible instruction on methods for designing and analyzing computer algorithms.",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656485477/addResources/Data-Structure-Algorithms/The_Algorithm_design_Manual_rpqbr7.pdf",
-      featured: false,
-    },
-  ],
 }) => {
   const [visible, setVisible] = useState(9);
   const onLoadMoreClick = () => {
     setVisible((v) => v + 8);
   };
+  const [posts, setPost]= useState([]);
+  useEffect(()=>{
+    fetch("http://localhost:3001/resources/getresources",)
+      .then((res) => {
+        return (res.json());
+      })
+      .then((result)=> {
+        setPost(getArray(result,0,staticData));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[])
   return (
     <AnimationRevealPage>
       <Header />

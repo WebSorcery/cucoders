@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts";
 import tw from "twin.macro";
@@ -8,7 +8,7 @@ import Header from "components/headers/light.js";
 import Footer from "components/footers/footers.js";
 import { SectionHeading } from "components/misc/Headings";
 import { PrimaryButton } from "components/misc/Buttons";
-
+import { getArray } from "../getResources";
 const HeadingRow = tw.div`flex`;
 const Heading = tw(SectionHeading)`text-gray-900`;
 const Posts = tw.div`mt-6 sm:-mr-8 flex flex-wrap`;
@@ -48,96 +48,109 @@ const Description = tw.div``;
 
 const ButtonContainer = tw.div`flex justify-center`;
 const LoadMoreButton = tw(PrimaryButton)`mt-16 mx-auto`;
-
+let staticData = [
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "C Notes for Professionals",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481981/addResources/languages/C_yzm4yi.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Head First Python",
+    description: "",
+    url: "https://drive.google.com/file/d/1s5jFYX-XenDMBinULndtIX190JzZ71pV/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "CPP Notes for Professionals",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481984/addResources/languages/CPlusPlus_gghczb.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Bash Notes for Professionals",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481985/addResources/languages/Bash_hule5l.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "All Java Programs",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481978/addResources/languages/All_Java_Programs_dpr2es.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "CPP STL",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481986/addResources/languages/Cpp_STL_Reference-Manual_v7b0cc.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Ruby Notes for Professionals",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481999/addResources/languages/Ruby_gcivom.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "OOPs Question",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481991/addResources/languages/oops_questions_for_cse_3rd_sem_hj2f4p.pdf",
+    featured: false,
+  },
+]
 export default ({
   headingText = "Programming Language Resources",
-  posts = [
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "C Notes for Professionals",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481981/addResources/languages/C_yzm4yi.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Head First Python",
-      description: "",
-      url: "https://drive.google.com/file/d/1s5jFYX-XenDMBinULndtIX190JzZ71pV/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "CPP Notes for Professionals",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481984/addResources/languages/CPlusPlus_gghczb.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Bash Notes for Professionals",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481985/addResources/languages/Bash_hule5l.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "All Java Programs",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481978/addResources/languages/All_Java_Programs_dpr2es.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "CPP STL",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481986/addResources/languages/Cpp_STL_Reference-Manual_v7b0cc.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Ruby Notes for Professionals",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481999/addResources/languages/Ruby_gcivom.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1542831371-d531d36971e6?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "OOPs Question",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656481991/addResources/languages/oops_questions_for_cse_3rd_sem_hj2f4p.pdf",
-      featured: false,
-    },
-  ],
+  
 }) => {
   const [visible, setVisible] = useState(9);
   const onLoadMoreClick = () => {
     setVisible((v) => v + 8);
   };
+  const [posts, setPost]= useState([]);
+  useEffect(()=>{
+    fetch("http://localhost:3001/resources/getresources",)
+      .then((res) => {
+        return (res.json());
+      })
+      .then((result)=> {
+        setPost(getArray(result,3,staticData));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[])
   return (
     <AnimationRevealPage>
       <Header />

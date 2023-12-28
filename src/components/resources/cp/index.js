@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts";
 import tw from "twin.macro";
@@ -8,7 +8,7 @@ import Header from "components/headers/light.js";
 import Footer from "components/footers/footers.js";
 import { SectionHeading } from "components/misc/Headings";
 import { PrimaryButton } from "components/misc/Buttons";
-
+import { getArray } from "../getResources";
 const HeadingRow = tw.div`flex`;
 const Heading = tw(SectionHeading)`text-gray-900`;
 const Posts = tw.div`mt-6 sm:-mr-8 flex flex-wrap`;
@@ -48,107 +48,119 @@ const Description = tw.div``;
 
 const ButtonContainer = tw.div`flex justify-center`;
 const LoadMoreButton = tw(PrimaryButton)`mt-16 mx-auto`;
-
+let staticData = [
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Coding Interview Questions By Narasimha Karumanchi",
+    description: "",
+    url: "https://drive.google.com/file/d/1oQzg7N8k0AngFnEKKyNWgF7RzRnGuWFy/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Handbook",
+    date: "Feb 22, 2021",
+    title: "Competitive Programming",
+    description: "",
+    url: "https://drive.google.com/file/d/1qFFA5sHO63aLOk3ovZB3xnM59VnndN3B/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Computational Geometry",
+    description: "",
+    url: "https://drive.google.com/file/d/1YGiD-IAaZpQJfoumuyQkbg0afa-f9kwH/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "CRACKING the CODING INTERVIEW",
+    description: "",
+    url: "https://drive.google.com/file/d/1_sORffeUsE8jD4pzOtEmBFAB5zmLllgJ/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Dynamic Programming Questions:",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487335/addResources/Competitive-Programming/Dynamic_Programming_Questions_r6pb8x.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 22, 2021",
+    title: "Elements of Programming Interview",
+    description: "",
+    url: "https://drive.google.com/file/d/19xxtxzkgeyasEtlLhjviz_tCrQekA2Kj/view?usp=sharing",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 5, 2021",
+    title: "Competitive Programmer’s Handbook",
+    description:
+      "Competitive Programmer's Handbook is a book whose purpose is to give the reader a thorough introduction to competitive programming.",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487320/addResources/Competitive-Programming/Competitive_Programmer_s_Handbook_aar6kh.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 5, 2021",
+    title: "Handbook of geometry for competitive_programmers",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487351/addResources/Competitive-Programming/Handbook_of_geometry_for_competitive_programmers_qeuium.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
+    category: "Question Bank",
+    date: "Feb 5, 2021",
+    title: "2011 Stanford Local ACM Programming Contest",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487360/addResources/Competitive-Programming/problems_ome20c.pdf",
+    featured: false,
+  },
+]
 export default ({
   headingText = "CP Resources",
-  posts = [
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Coding Interview Questions By Narasimha Karumanchi",
-      description: "",
-      url: "https://drive.google.com/file/d/1oQzg7N8k0AngFnEKKyNWgF7RzRnGuWFy/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Handbook",
-      date: "Feb 22, 2021",
-      title: "Competitive Programming",
-      description: "",
-      url: "https://drive.google.com/file/d/1qFFA5sHO63aLOk3ovZB3xnM59VnndN3B/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Computational Geometry",
-      description: "",
-      url: "https://drive.google.com/file/d/1YGiD-IAaZpQJfoumuyQkbg0afa-f9kwH/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "CRACKING the CODING INTERVIEW",
-      description: "",
-      url: "https://drive.google.com/file/d/1_sORffeUsE8jD4pzOtEmBFAB5zmLllgJ/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Dynamic Programming Questions:",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487335/addResources/Competitive-Programming/Dynamic_Programming_Questions_r6pb8x.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 22, 2021",
-      title: "Elements of Programming Interview",
-      description: "",
-      url: "https://drive.google.com/file/d/19xxtxzkgeyasEtlLhjviz_tCrQekA2Kj/view?usp=sharing",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 5, 2021",
-      title: "Competitive Programmer’s Handbook",
-      description:
-        "Competitive Programmer's Handbook is a book whose purpose is to give the reader a thorough introduction to competitive programming.",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487320/addResources/Competitive-Programming/Competitive_Programmer_s_Handbook_aar6kh.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 5, 2021",
-      title: "Handbook of geometry for competitive_programmers",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487351/addResources/Competitive-Programming/Handbook_of_geometry_for_competitive_programmers_qeuium.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1024&q=80",
-      category: "Question Bank",
-      date: "Feb 5, 2021",
-      title: "2011 Stanford Local ACM Programming Contest",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656487360/addResources/Competitive-Programming/problems_ome20c.pdf",
-      featured: false,
-    },
-  ],
 }) => {
   const [visible, setVisible] = useState(9);
   const onLoadMoreClick = () => {
     setVisible((v) => v + 8);
   };
+  const [posts, setPost]= useState([]);
+  useEffect(()=>{
+    fetch("http://localhost:3001/resources/getresources",)
+      .then((res) => {
+        return (res.json());
+      })
+      .then((result)=> {
+        setPost(getArray(result,1,staticData));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[])
   return (
     <AnimationRevealPage>
       <Header />

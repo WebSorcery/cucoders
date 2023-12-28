@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts";
 import tw from "twin.macro";
@@ -8,7 +8,7 @@ import Header from "components/headers/light.js";
 import Footer from "components/footers/footers.js";
 import { SectionHeading } from "components/misc/Headings";
 import { PrimaryButton } from "components/misc/Buttons";
-
+import { getArray } from "../getResources";
 const HeadingRow = tw.div`flex`;
 const Heading = tw(SectionHeading)`text-gray-900`;
 const Posts = tw.div`mt-6 sm:-mr-8 flex flex-wrap`;
@@ -48,56 +48,69 @@ const Description = tw.div``;
 
 const ButtonContainer = tw.div`flex justify-center`;
 const LoadMoreButton = tw(PrimaryButton)`mt-16 mx-auto`;
-
+let staticData = [
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Cheatsheet",
+    date: "Feb 27, 2021",
+    title: "Atlassian-git-cheatsheet",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486814/addResources/Version-Control/atlassian-git-cheatsheet_bojbzy.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Cheatsheet",
+    date: "Feb 27, 2021",
+    title: "git cheatsheet",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486828/addResources/Version-Control/git-cheat-sheet-education_sqod3l.pdf",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Cheatsheet",
+    date: "Feb 27, 2021",
+    title: "git cheatsheet",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486843/addResources/Version-Control/github-git-cheat-sheet_jlxbc9.ai",
+    featured: false,
+  },
+  {
+    imageSrc:
+      "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
+    category: "Book",
+    date: "Feb 27, 2021",
+    title: "git Notes for Professionals",
+    description: "",
+    url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486861/addResources/Version-Control/GitNotesForProfessionals_ttvt9o.pdf",
+    featured: false,
+  },
+]
 export default ({
   headingText = "Version Control Resources",
-  posts = [
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Cheatsheet",
-      date: "Feb 27, 2021",
-      title: "Atlassian-git-cheatsheet",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486814/addResources/Version-Control/atlassian-git-cheatsheet_bojbzy.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Cheatsheet",
-      date: "Feb 27, 2021",
-      title: "git cheatsheet",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486828/addResources/Version-Control/git-cheat-sheet-education_sqod3l.pdf",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Cheatsheet",
-      date: "Feb 27, 2021",
-      title: "git cheatsheet",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486843/addResources/Version-Control/github-git-cheat-sheet_jlxbc9.ai",
-      featured: false,
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1024&q=80",
-      category: "Book",
-      date: "Feb 27, 2021",
-      title: "git Notes for Professionals",
-      description: "",
-      url: "https://res.cloudinary.com/cuchapter/image/upload/v1656486861/addResources/Version-Control/GitNotesForProfessionals_ttvt9o.pdf",
-      featured: false,
-    },
-  ],
+  
 }) => {
   const [visible, setVisible] = useState(7);
   const onLoadMoreClick = () => {
     setVisible((v) => v + 6);
   };
+  const [posts, setPost]= useState([]);
+  useEffect(()=>{
+    fetch("http://localhost:3001/resources/getresources",)
+      .then((res) => {
+        return (res.json());
+      })
+      .then((result)=> {
+        setPost(getArray(result,7,staticData));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[])
   return (
     <AnimationRevealPage>
       <Header />
