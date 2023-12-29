@@ -73,6 +73,7 @@ import React from "react";
 // import { Navigate } from "react-router";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { css } from "styled-components/macro"; //eslint-disable-line
+import Main from "components/profile/Main";
 
 export default function App() {
   //-----------------------------------------INITIALIZING
@@ -233,6 +234,9 @@ export default function App() {
         </Route>
         <Route exact path="/web">
           {isAuthenticated ? <Web /> : <LoginError />}
+        </Route>
+        <Route exact path="/profile">
+          <Main />
         </Route>
         {/* <Route exact path="/lostpassword">
           <LostPassword />
