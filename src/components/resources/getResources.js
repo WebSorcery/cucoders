@@ -1,19 +1,11 @@
 function find(url, posts) {
-    for (let i = 0; i < posts.length; i++) {
-        if (posts[i].url == url) {
-            return i;
-        }
-    }
-    return -1;
+    return posts.findIndex(post => post.url === url);
 }
 function driveLink(posts){
-    let arr=[];
-    for (let i = 0; i < posts.length; i++) {
-            if (posts[i].url.slice(0,17) != "https://res.cloud") {
-                arr.push(i);
-        }
-    }
-    return arr;
+    return posts
+            .map((post, index) => ({ url: post.url, index }))
+            .filter(({ url }) => !url.startsWith("https://res.cloud"))
+            .map(({ index }) => index);
 }
 export const getArray=(array,index,posts)=>{
     let post=[];
